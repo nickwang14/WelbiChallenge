@@ -1,31 +1,33 @@
-import React from "react";
-import { ListGroupItem } from 'react-bootstrap';
-import Page from './page';
+import React from "react"
+import { ListGroupItem } from 'react-bootstrap'
+import Page from './page'
+import { selectProgramById } from '../store/programSlice'
+import { selectResidentById } from '../store/residentSlice'
+import { useSelector } from 'react-redux'
 
 const Resident = (props) => {
-  const { ambulation
-        , attendance
-        , birthDate
-        , moveInDate
-        , id
-        , lastName
-        , firstName
-        , levelOfCare
-        , preferredName
-        , room
-        , status
-        , createdAt
-        , updatedAt
-        , programs
-      } = props;
+  const {
+    ambulation,
+    attendance,
+    birthDate,
+    moveInDate,
+    id,
+    lastName,
+    firstName,
+    levelOfCare,
+    preferredName,
+    room,
+    status,
+    createdAt,
+    updatedAt
+  } = useSelector(selectResidentById(props.resident))
+
 
   const getActivities = list => list.map((activity) => 
       <ListGroupItem key={activity.programId}>
-        { filterList(activity.programId)[0] && filterList(activity.programId)[0].name }, Engagement: {activity.status}
+        { useSelector(selectProgramById(activity.programId)).name }, Engagement: { activity.status }
       </ListGroupItem>
-    );
-
-  const filterList = id => programs.filter((program) => program.id === id)
+    )
 
   const mainText = [
     `Birthday: ${birthDate['@ts']}`,
@@ -45,4 +47,4 @@ const Resident = (props) => {
     />
 }
 
-export default Resident;
+export default Resident

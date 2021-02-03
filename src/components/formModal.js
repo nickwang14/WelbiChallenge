@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Button, Modal} from 'react-bootstrap';
+import React, { useState } from "react"
+import { Button, Modal} from 'react-bootstrap'
 import { ResidentForm, ProgramForm } from './addForm'
-import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css"
 
 const FormModal = (props) => {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+  
   return (
     <>
       <Button variant="primary" style={{margin:10}} onClick={handleShow}> Add {props.title} </Button>
@@ -22,7 +22,7 @@ const FormModal = (props) => {
         </Modal.Body>
       </Modal>
     </>
-  );
+  )
 }
 
-export default FormModal;
+export default FormModal

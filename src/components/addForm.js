@@ -1,37 +1,35 @@
-import React, { useState } from "react";
-import { Button, DropdownButton, Dropdown, Form, Col} from 'react-bootstrap';
-import Api from '../apiCalls';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import React, { useState } from "react"
+import { Button, DropdownButton, Dropdown, Form, Col} from 'react-bootstrap'
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
-const levelOfCare = ['ASSISTED', 'INDEPENDENT', 'LONGTERM', 'MEMORY'];
-const residentAmbulation = ['CANE', 'NOLIMITATIONS', 'WALKER', 'WHEELCHAIR'];
-const eventDimension = ['Community', 'Intellectual', 'Physical', 'Social'];
-const eventTags = ['Outing', 'Special', 'Technology', 'Vendor'];
-const eventHobbies = [ 'Alchohol'
-                     , 'Arts'
-                     , 'Billiards'
-                     , 'Role Playing'
-                     , 'Board Games'
-                     , 'Boating'
-                     , 'Computer'
-                     , 'Crafts'
-                     , 'Dance'
-                     , 'Debate'
-                     , 'Learning'
-                     , 'Paintball'
-                     , 'Pottery'
-                     , 'Pub Games'
-                     , 'Public Speaking'
-                     , 'Space'
-                     , 'Storytelling'
-                     , 'Video Games'
-                     , 'Virtual Reality'
-                    ];
+const levelOfCare = ['ASSISTED', 'INDEPENDENT', 'LONGTERM', 'MEMORY']
+const residentAmbulation = ['CANE', 'NOLIMITATIONS', 'WALKER', 'WHEELCHAIR']
+const eventDimension = ['Community', 'Intellectual', 'Physical', 'Social']
+const eventTags = ['Outing', 'Special', 'Technology', 'Vendor']
+const eventHobbies = [
+  'Alchohol',
+  'Arts',
+  'Billiards',
+  'Role Playing',
+  'Board Games',
+  'Boating',
+  'Computer',
+  'Crafts',
+  'Dance',
+  'Debate',
+  'Learning',
+  'Paintball',
+  'Pottery',
+  'Pub Games',
+  'Public Speaking',
+  'Space',
+  'Storytelling',
+  'Video Games',
+  'Virtual Reality'
+]
 const eventLocation = ['Cafeteria', 'Group Study Room F', 'Gymnasium', 'Parking Lot', 'The Green Door', 'Workshop']
 const eventFacilitators = ['Director Of Rec', 'Rec Aide', 'Resident']
-
-// const GetFormattedDate = (date) => `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`
 
 const ResidentForm = (props) => {
   const [resident, setResident] = useState({
@@ -44,14 +42,14 @@ const ResidentForm = (props) => {
     moveInDate: new Date(),
     levelOfCare: '',
     ambulation: ''
-  });
+  })
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     console.log(resident)
-    //Api.addResident(resident);
-    props.handleClose();
-  };
+    Api.addResident(resident)
+    props.handleClose()
+  }
   
   return (
   <Form onSubmit={handleSubmit}>
@@ -149,14 +147,14 @@ const ProgramForm = (props) => {
     dimension: '',
     tags: [],
     hobbies: []
-  });
+  })
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(program);
-    // Api.addProgram(program);
-    props.handleClose();
-  };
+    event.preventDefault()
+    console.log(program)
+    Api.addProgram(program)
+    props.handleClose()
+  }
 
   return (
   <Form onSubmit={handleSubmit}>
