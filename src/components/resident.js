@@ -1,11 +1,11 @@
 import React from "react"
-import { ListGroupItem } from 'react-bootstrap'
 import Page from './page'
 import { selectProgramById } from '../store/programSlice'
 import { selectResidentById } from '../store/residentSlice'
 import { useSelector } from 'react-redux'
 
 const Resident = (props) => {
+
   const {
     ambulation,
     attendance,
@@ -20,14 +20,7 @@ const Resident = (props) => {
     status,
     createdAt,
     updatedAt
-  } = useSelector(selectResidentById(props.resident))
-
-
-  const getActivities = list => list.map((activity) => 
-      <ListGroupItem key={activity.programId}>
-        { useSelector(selectProgramById(activity.programId)).name }, Engagement: { activity.status }
-      </ListGroupItem>
-    )
+  } = useSelector(state => selectResidentById(state, props.resident))
 
   const mainText = [
     `Birthday: ${birthDate['@ts']}`,
@@ -36,14 +29,20 @@ const Resident = (props) => {
     `Status: ${status}`
   ]
 
-  return <Page 
+  const attendanceListWithNames = () => attendance.map(
+    activity => {
+      return { ...activity, name: useSelector(state => selectProgramById(state, activity.programId)).name, id: activity.programId }
+  })
+
+  return <Page
+      id={id}
       titleText={`${lastName}, ${preferredName? `"${preferredName}" ,`: ""} ${firstName}`}
       subtitleText={`Care Needed: ${levelOfCare}, Ambulation: ${ambulation}`}
       bodyText={mainText}
       listTitle='Activities'
-      list={getActivities(attendance)}
+      list={attendanceListWithNames()}
       footerText={`Created: ${createdAt['@ts']}, Updated: ${updatedAt['@ts']}`}
-      id={id}
+
     />
 }
 

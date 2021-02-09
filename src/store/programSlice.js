@@ -15,8 +15,8 @@ const initialState = programsAdapter.getInitialState({
 })
 
 export const fetchPrograms = createAsyncThunk('programs/fetchPrograms', async () => await Api.getPrograms())
-export const addProgram = createAsyncThunk('todos/addProgram', async program => await Api.addProgram(program))
-export const residentProgram = createAsyncThunk('programs/residentProgram', async (programId, residentId) => await Api.residentProgram(programId, { status: 'Active', residentId: residentId }))
+export const addProgram = createAsyncThunk('programs/addProgram', async program => await Api.addProgram(program))
+export const residentProgram = createAsyncThunk('programs/residentProgram', async (connect) => await Api.residentProgram(connect.programId, {status: connect.status, residentId: connect.residentId}))
 
 const programSlice = createSlice({
   name: 'programs',
@@ -34,7 +34,11 @@ const programSlice = createSlice({
       })
       .addCase(fetchPrograms.rejected, (state, action) => {
         console.log("FetchPrograms was Rejected")
+        console.log(action)
         return action.payload
+      })
+      .addCase(addProgram.pending, (state, action) => {
+        state.status = 'loading'
       })
       .addCase(addProgram.fulfilled, programsAdapter.addOne)
       .addCase(addProgram.rejected, (state, action) => {
@@ -45,9 +49,8 @@ const programSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(residentProgram.fulfilled, (state, action) => {
-        const { programId, resident } = action.payload
-        state.entities[resident.id].attendance.push(programId)
-        useDispatch(linkResidentToProgram(programId, resident.id))
+        const { programId, residentId, status } = action.payload
+        state.entities[programId].attendance.push({residentId: residentId, status:status})
         state.status = 'idle'
       })
       .addCase(residentProgram.rejected, (state, action) => {
@@ -57,7 +60,6 @@ const programSlice = createSlice({
   }
 })
 
-export const {} = programSlice.actions
 export default programSlice.reducer
 
 export const {

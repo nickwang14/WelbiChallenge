@@ -1,9 +1,8 @@
 import React from "react"
-import { ListGroupItem } from 'react-bootstrap'
 import Page from './page'
 import { selectProgramById } from '../store/programSlice'
 import { selectResidentById } from '../store/residentSlice'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const Program = (props) => {
   const {
@@ -19,16 +18,7 @@ const Program = (props) => {
     tags,
     start,
     end
-  } = useSelector(
-        selectProgramById(props.program)
-      )
-      
-  const getProgramAttendees = list => 
-    list.map( (attendee) => 
-      <ListGroupItem key={attendee.residentId}>
-        { useSelector(selectResidentById(attendee.residentId)).name }, Engagement: { attendee.status }
-      </ListGroupItem>
-    );
+  } = useSelector(state => selectProgramById(state, props.program))
 
   const mainText = [
     `Dimension: ${dimension}`,
@@ -38,12 +28,17 @@ const Program = (props) => {
     `Recurring: ${isRepeated? 'Yes': 'No'}`
   ]
 
+  const attendeeListWithNames = () => attendance.map(
+    attendee => {
+      return { ...attendee, name: useSelector(state => selectResidentById(state, attendee.residentId)).name, id: attendee.residentId }
+  })
+
   return <Page 
   titleText={name}
   subtitleText={`Start: ${start}, End: ${end}`}
   bodyText={mainText}
   listTitle='Attendees'
-  list={getProgramAttendees(attendance)}
+  list={attendeeListWithNames(attendance)}
   footerText={`Tags: ${tags.length > 0 ? tags.join(', ') : 'None'}`}
   id={id}
 />

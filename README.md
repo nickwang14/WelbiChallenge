@@ -1,6 +1,13 @@
 ## Welbi
 Creating an app that handles event and attendance management. API provided by Welbi.co
 
+## Known Issues:
+- Date Selector type/updates are wonky
+- Joining Residents and events crashes
+- Loading statuses aren't properly used
+- Lots of conditional loading
+- Resident Names are HTML INPUT OBJECT (!?)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
 ## Available Scripts

@@ -1,4 +1,7 @@
 import React, { useState } from "react"
+import { useDispatch } from 'react-redux'
+import { addProgram } from '../store/programSlice'
+import { addResident } from '../store/residentSlice'
 import { Button, DropdownButton, Dropdown, Form, Col} from 'react-bootstrap'
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
@@ -43,11 +46,11 @@ const ResidentForm = (props) => {
     levelOfCare: '',
     ambulation: ''
   })
+  const dispatch = useDispatch()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log(resident)
-    Api.addResident(resident)
+    await dispatch(addResident({...resident, name: `${lastName}, ${firstName}`}))
     props.handleClose()
   }
   
@@ -102,6 +105,7 @@ const ResidentForm = (props) => {
         >
           {levelOfCare.map(care => (
           <Dropdown.Item
+            key={care}
             eventKey={care}
             active={resident.levelOfCare === care}
             onClick={() => setResident({...resident, levelOfCare: care}) }
@@ -119,6 +123,7 @@ const ResidentForm = (props) => {
         >
           {residentAmbulation.map(type => (
           <Dropdown.Item
+            key={type}
             eventKey={type}
             active={resident.ambulation === type}
             onClick={() => setResident({...resident, ambulation: type}) }
@@ -143,16 +148,16 @@ const ProgramForm = (props) => {
     end: new Date(),
     location: '',
     facilitators: [],
-    levelOfCare: '',
+    levelOfCare: [],
     dimension: '',
     tags: [],
     hobbies: []
   })
+  const dispatch = useDispatch()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log(program)
-    Api.addProgram(program)
+    await dispatch(addProgram(program))
     props.handleClose()
   }
 
@@ -210,6 +215,7 @@ const ProgramForm = (props) => {
         >
           {eventLocation.map(locationItem => (
           <Dropdown.Item
+            key={locationItem}
             eventKey={locationItem}
             active={program.location === locationItem}
             onClick={e => setProgram({...program, location: locationItem}) }
@@ -227,28 +233,12 @@ const ProgramForm = (props) => {
         >
           {eventDimension.map(dimensionItem => (
           <Dropdown.Item
+            key={dimensionItem}
             eventKey={dimensionItem}
             active={program.dimension === dimensionItem}
             onClick={e => setProgram({...program, dimension: dimensionItem}) }
           >
             {dimensionItem}
-          </Dropdown.Item>)
-          )}
-        </DropdownButton>
-      </Form.Group>
-      <Form.Group as={Col} controlId="levelOfCare">
-        <Form.Label style={{fontWeight: 500 , marginRight:10}}>Level Of Care</Form.Label>
-        <DropdownButton
-          id={'levelOfCare-Dropdown'}
-          title={program.levelOfCare ? program.levelOfCare : 'Pick One'}
-        >
-          {levelOfCare.map(care => (
-          <Dropdown.Item
-            eventKey={care}
-            active={program.levelOfCare === care}
-            onClick={() => setProgram({...program, levelOfCare: care}) }
-          >
-            {care}
           </Dropdown.Item>)
           )}
         </DropdownButton>
@@ -264,6 +254,7 @@ const ProgramForm = (props) => {
         >
           {eventFacilitators.map(facilitator => (
             <Dropdown.Item
+              key={facilitator}
               eventKey={facilitator}
               active={program.facilitators.length > 0 && program.facilitators.includes(facilitator)}
               onClick={() => {
@@ -285,6 +276,7 @@ const ProgramForm = (props) => {
         >
           {eventTags.map(tag => (
             <Dropdown.Item
+              key={tag}
               eventKey={tag}
               active={program.tags.length > 0 && program.tags.includes(tag)}
               onClick={() => {
@@ -298,6 +290,28 @@ const ProgramForm = (props) => {
           )}
         </DropdownButton>
       </Form.Group>
+      <Form.Group as={Col} controlId="levelOfCare">
+        <Form.Label style={{fontWeight: 500 , marginRight:10}}>Level Of Care</Form.Label>
+        <DropdownButton
+          id={'levelOfCare-Dropdown'}
+          title={program.levelOfCare.length ?`${program.levelOfCare.length} ${program.levelOfCare.length>1? 'Hobbies' : 'Hobby'} Selected` : 'Select All That Apply'}
+        >
+          {levelOfCare.map(care => (
+          <Dropdown.Item
+            key={care}
+            eventKey={care}
+            active={program.levelOfCare.length > 0 && program.levelOfCare.includes(care)}
+            onClick={() => {
+              let newCare = program.levelOfCare.length > 0 && program.levelOfCare.includes(care) ? program.levelOfCare.filter(member => member !== care && member) : [...program.levelOfCare, care]
+              setProgram({ ...program, levelOfCare: newCare})
+              }
+            }
+          >
+            {care}
+          </Dropdown.Item>)
+          )}
+        </DropdownButton>
+      </Form.Group>
       <Form.Group as={Col} controlId="eventHobbies">
         <Form.Label style={{fontWeight: 500 , marginRight:10}}>Hobbies</Form.Label>
         <DropdownButton
@@ -306,6 +320,7 @@ const ProgramForm = (props) => {
         >
           {eventHobbies.map(hobby => (
             <Dropdown.Item
+              key={hobby}
               eventKey={hobby}
               active={program.hobbies.length > 0 && program.hobbies.includes(hobby)}
               onClick={() => {

@@ -13,7 +13,11 @@ const initialState = residentsAdapter.getInitialState({
 })
 
 export const fetchResidents = createAsyncThunk('residents/fetchResidents', async () => await Api.getResidents())
-export const addResident = createAsyncThunk('todos/addResident', async resident => await Api.addResident(resident))
+export const addResident = createAsyncThunk('residents/addResident', async resident => {
+  console.log('Create new resident')
+  console.log(resident)
+  return await Api.addResident(resident)
+})
 
 const residentSlice = createSlice({
   name: 'residents',
@@ -21,8 +25,8 @@ const residentSlice = createSlice({
   reducers: {
     linkResidentToProgram: {
       reducer(state, action) {
-        const { programId, residentId } = action.payload
-        state.entities[residentId].attendance = { status: 'Active', programId: programId}
+        const { programId, residentId, status } = action.payload
+        state.entities[residentId].attendance = { status: status, programId: programId}
       },
       prepare(programId, residentId) {
         return {
@@ -44,6 +48,9 @@ const residentSlice = createSlice({
         console.log("FetchResidents was Rejected")
         return action.payload
       })
+      .addCase(addResident.pending, (state, action) => {
+        state.status = 'loading'
+      })
       .addCase(addResident.fulfilled, residentsAdapter.addOne)
       .addCase(addResident.rejected, (state, action) => {
         console.log("AddResident was Rejected")
@@ -58,17 +65,8 @@ export default residentSlice.reducer
 
 export const {
   selectAll: selectResidents,
-  // selectById: selectResidentById
-} = residentsAdapter.getSelectors(state => {
-  console.log('getSelectorResident')
-  console.log(state)
-  console.log(state.residents)
-  return state.residents})
-
-  export const selectResidentById = createSelector(
-    selectResidents,
-    (residents, id) => residents[id]
-  )
+  selectById: selectResidentById
+} = residentsAdapter.getSelectors(state => state.residents)
 
 export const selectResidentIds = createSelector(
   selectResidents,

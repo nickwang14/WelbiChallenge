@@ -1,7 +1,15 @@
 import React, { useState } from "react"
-import { Card, ListGroup, Button, DropdownButton, Dropdown, Form, } from 'react-bootstrap'
-import { residentProgram } from '../store/programSlice'
+import { useDispatch } from 'react-redux'
+import { Card, ListGroup, ListGroupItem, Button, DropdownButton, Dropdown, Form, Row } from 'react-bootstrap'
+import { residentProgram, selectPrograms } from '../store/programSlice'
+import { selectResidents, linkResidentToProgram } from '../store/residentSlice'
 import { useSelector } from "react-redux";
+
+const engagementOptions = [
+  'Active',
+  'Passive',
+  'Declined'
+]
 
 const Page = (props) => {
   const {
@@ -13,9 +21,46 @@ const Page = (props) => {
     footerText,
     id
   } = props
-  const [itemId, setItemId] = useState('')
+  const [connectItems, setConnectItems] = useState('')
+  const [engagementStatus, setEngagementStatus] = useState('')
+  const dispatch = useDispatch()
 
-  handleClick = async () => listTitle === "Attendees" ? await residentProgram(id, itemId) : await residentProgram(itemId, id)
+  let handleClick
+  let updateList
+  let getDropdownItems
+  if (listTitle === "Attendees") {
+    handleClick = async () => {
+      let response = await dispatch(residentProgram({residentId: connectItems.id, programId: id, status: engagementStatus}))
+      useDispatch(linkResidentToProgram(id, connectItems.id, engagementStatus))
+      return response
+    }
+    updateList = useSelector(selectResidents)
+    getDropdownItems = () => updateList ? updateList.length && updateList.map(residentItem => (
+      <Dropdown.Item
+        eventKey={`${titleText}-${residentItem.id}`}
+        key={`${titleText}-${residentItem.id}`}
+        active={connectItems.id}
+        onClick={e => setConnectItems({id: residentItem.id, name: residentItem.name})}
+      > 
+        {residentItem.name}
+      </Dropdown.Item>)) : <Dropdown>Loading...</Dropdown>
+  } else {
+    handleClick = async () => {
+      let response = await dispatch(residentProgram({residentId: id, programId: connectItems.id, status: engagementStatus}))
+      useDispatch(linkResidentToProgram(connectItems.id, id, engagementStatus))
+      return response
+    }
+    updateList = useSelector(selectPrograms)
+    getDropdownItems = () => updateList ? updateList.length && updateList.map(programItem => (
+      <Dropdown.Item
+        eventKey={`${titleText}-${programItem.id}`}
+        key={`${titleText}-${programItem.id}`}
+        active={connectItems.id}
+        onClick={e => setConnectItems({id: programItem.id, name: programItem.name})}
+      > 
+        {programItem.name}
+      </Dropdown.Item>)) : <Dropdown>Loading...</Dropdown>
+    }
 
   return (
     <Card key={id} style={{margin: '5px'}}>
@@ -24,25 +69,44 @@ const Page = (props) => {
         <Card.Subtitle className="mb-2 text-muted"> { subtitleText } </Card.Subtitle>
         {bodyText[0] && bodyText.map((line, index) => <Card.Text key={index}> { line } </Card.Text>)}
       </Card.Body>
-      <Card.Title> { listTitle } </Card.Title>
-      <ListGroup className="list-group-flush"> { list } </ListGroup>
-      <Form.Label style={{fontWeight: 500 , marginRight:10}}>Add Resident to Program</Form.Label>
-        <DropdownButton
-          id={'listTitle'}
-          title={list}
-        >
-          {list.map(listItem => (
-          <Dropdown.Item
-            eventKey={listItem}
-            active={listItem}
-            onClick={e => setItemId(listItem) }
+        <Form.Label style={{fontWeight: 500 , marginRight:10}}>Add Resident to Event</Form.Label>
+        <Row style={{textAlign:'center', marginLeft:'5%'}}>
+          <DropdownButton
+            style={{marginLeft:'1%'}}
+            id={`list-${titleText}-${id}`}
+            title={connectItems ? connectItems.name : 'Pick One'}
           >
-            {listItem}
-          </Dropdown.Item>)
-          )}
-        </DropdownButton>
-      <Button onClick={handleClick}> Add Resident to Program </Button>
-      
+            {getDropdownItems()}
+          </DropdownButton>
+          <DropdownButton
+            style={{marginLeft:'1%'}}
+            id={`status-${titleText}-${id}-`}
+            title={engagementStatus ? engagementStatus : 'Pick One'}
+          >
+            {
+             engagementOptions.map(option => (
+              <Dropdown.Item
+                eventKey={`${titleText}-${option}`}
+                key={`${titleText}-${option}`}
+                active={engagementStatus}
+                onClick={e => setEngagementStatus(option)}
+              > 
+                {option}
+              </Dropdown.Item>))
+            }
+          </DropdownButton>
+          <Button style={{marginLeft:'1%'}} onClick={handleClick} type='submit'> Connect </Button>
+        </Row>
+      <Card.Title> { listTitle } </Card.Title>
+      <ListGroup className="list-group-flush">
+      {
+        list ? list.length && list.map((listItem) => 
+          <ListGroupItem key={listItem.id}>
+            { listItem.name }, Engagement: { listItem.status }
+          </ListGroupItem>) : <ListGroupItem key={0}>Nothing to show</ListGroupItem>
+      }
+
+      </ListGroup>
       <Card.Footer> { footerText } </Card.Footer>
     </Card>
 )}
