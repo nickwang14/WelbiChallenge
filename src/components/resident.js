@@ -3,6 +3,7 @@ import Page from './page'
 import { selectProgramById } from '../store/programSlice'
 import { selectResidentById } from '../store/residentSlice'
 import { useSelector } from 'react-redux'
+import { formatDate } from '../util'
 
 const Resident = (props) => {
 
@@ -23,8 +24,8 @@ const Resident = (props) => {
   } = useSelector(state => selectResidentById(state, props.resident))
 
   const mainText = [
-    `Birthday: ${birthDate['@ts']}`,
-    `Move In Date: ${moveInDate['@ts']}`,
+    `Birthday: ${formatDate(birthDate['@ts'])}`,
+    `Move In Date: ${formatDate(moveInDate['@ts'])}`,
     `Room Number: ${room}`,
     `Status: ${status}`
   ]
@@ -41,7 +42,7 @@ const Resident = (props) => {
       bodyText={mainText}
       listTitle='Activities'
       list={attendanceListWithNames()}
-      footerText={`Created: ${createdAt['@ts']}, Updated: ${updatedAt['@ts']}`}
+      footerText={`Created: ${formatDate(createdAt['@ts'])}, Updated: ${formatDate(updatedAt['@ts'])}`}
 
     />
 }

@@ -68,11 +68,10 @@ const Page = (props) => {
         <Card.Title id="title"> { titleText } </Card.Title>
         <Card.Subtitle className="mb-2 text-muted"> { subtitleText } </Card.Subtitle>
         {bodyText[0] && bodyText.map((line, index) => <Card.Text key={index}> { line } </Card.Text>)}
-      </Card.Body>
-        <Form.Label style={{fontWeight: 500 , marginRight:10}}>Add Resident to Event</Form.Label>
-        <Row style={{textAlign:'center', marginLeft:'5%'}}>
+        <Form.Label style={{fontWeight: 500}}>Add Resident to Event</Form.Label>
+        <Row>
           <DropdownButton
-            style={{marginLeft:'1%'}}
+            style={{marginLeft:'15px'}}
             id={`list-${titleText}-${id}`}
             title={connectItems ? connectItems.name : 'Pick One'}
           >
@@ -97,8 +96,9 @@ const Page = (props) => {
           </DropdownButton>
           <Button style={{marginLeft:'1%'}} onClick={handleClick} type='submit'> Connect </Button>
         </Row>
-      <Card.Title> { listTitle } </Card.Title>
-      <ListGroup className="list-group-flush">
+      </Card.Body>
+        <Card.Title style={{textAlign:'left', marginLeft:'20px'}}> { listTitle } </Card.Title>
+      <ListGroup className="list-group-flush" style={{textAlign:'left'}}>
       {
         list ? list.length && list.map((listItem) => 
           <ListGroupItem key={listItem.id}>

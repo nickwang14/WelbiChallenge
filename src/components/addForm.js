@@ -41,8 +41,12 @@ const ResidentForm = (props) => {
     lastName: '',
     firstName: '',
     room: '',
-    birthDate: new Date("2000-01-01"),
-    moveInDate: new Date(),
+    birthDate: {
+      '@ts': new Date("2000-01-01"),
+    },
+    moveInDate: {
+      '@ts': new Date(),
+    },
     levelOfCare: '',
     ambulation: ''
   })
@@ -83,7 +87,7 @@ const ResidentForm = (props) => {
         <Form.Label style={{fontWeight: 500 , marginRight:10}}>Birth Date</Form.Label>
         <DatePicker
         id="birthDate"
-        selected={resident.birthDate}
+        selected={resident.birthDate['@ts']}
         onChange={date => setResident({...resident, birthDate: {'@ts': date}}) }/>
       </Form.Group>
     </Form.Row>
@@ -92,7 +96,7 @@ const ResidentForm = (props) => {
         <Form.Label style={{fontWeight: 500 , marginRight:10}}>Move In Date</Form.Label>
         <DatePicker
         id="moveInDate"
-        selected={resident.moveInDate}
+        selected={resident.moveInDate['@ts']}
         onChange={date => setResident({...resident, moveInDate: {'@ts':date}}) }/>
       </Form.Group>
     </Form.Row>

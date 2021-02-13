@@ -3,6 +3,7 @@ import Page from './page'
 import { selectProgramById } from '../store/programSlice'
 import { selectResidentById } from '../store/residentSlice'
 import { useSelector } from 'react-redux'
+import { formatDateTime } from '../util'
 
 const Program = (props) => {
   const {
@@ -35,7 +36,7 @@ const Program = (props) => {
 
   return <Page 
   titleText={name}
-  subtitleText={`Start: ${start}, End: ${end}`}
+  subtitleText={`Start: ${formatDateTime(start)}, End: ${formatDateTime(end)}`}
   bodyText={mainText}
   listTitle='Attendees'
   list={attendeeListWithNames(attendance)}

@@ -2,7 +2,6 @@
 Creating an app that handles event and attendance management. API provided by Welbi.co
 
 ## Known Issues:
-- Date Selector type/updates are wonky
 - Joining Residents and events crashes
 - Loading statuses aren't properly used
 - Lots of conditional loading

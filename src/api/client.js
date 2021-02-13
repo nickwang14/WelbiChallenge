@@ -3,36 +3,32 @@ import axios from 'axios'
 
 const getPrograms = async () => {
   console.log("Fetching Programs")
-  let programs = await axios.get(`/programs`)
+  return await axios.get(`/programs?token=${process.env.TOKEN}`)
     .then(parseJSON)
-  console.log(programs)
-  return programs
 }
 
 const addProgram = async (program) => {
   console.log(`Adding Program ${program.programId}`)
-  return await axios.post(`/programs`, program)
+  return await axios.post(`/programs?token=${process.env.TOKEN}`, program)
     .then(parseJSON)
 }
 
 const getResidents = async () => {
   console.log("Fetching Residents")
-  let residents = await axios.get(`/residents`)
+  return await axios.get(`/residents?token=${process.env.TOKEN}`)
     .then(parseJSON)
-    console.log(residents)
-  return residents
 }
 
 const addResident = async (resident) => {
   console.log("Adding Resident")
-  return await axios.post(`/residents`, resident)
+  return await axios.post(`/residents?token=${process.env.TOKEN}`, resident)
     .then(parseJSON)
 }
 
 const residentProgram = async (programId, resident) => {
   console.log(`Assinging ${programId}`)
   console.log(resident)
-  return await axios.post(`/programs/${programId}/attend`, resident)
+  return await axios.post(`/programs/${programId}/attend?token=${process.env.TOKEN}`, resident)
     .then(parseJSON)
 }
 
