@@ -54,7 +54,7 @@ const ResidentForm = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await dispatch(addResident({...resident, name: `${lastName}, ${firstName}`}))
+    await dispatch(addResident({...resident, name: `${resident.lastName}, ${resident.firstName}`}))
     props.handleClose()
   }
   

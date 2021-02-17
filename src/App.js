@@ -2,36 +2,48 @@ import React from "react"
 import { Row, Col } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useSelector } from 'react-redux'
-import { selectProgramIds } from './store/programSlice'
-import { selectResidentIds } from './store/residentSlice'
+import Header from './components/header'
+import List from './components/list'
+import Loading from './components/loading'
+import Program from './components/program'
+import Resident from './components/resident'
 
-import Program from "./components/program"
-import Resident from "./components/resident"
-import FormModal from './components/formModal'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
-/* eslint-disable no-undef */
 const App = () => {
-  const programs = useSelector(selectProgramIds)
-  const residents = useSelector(selectResidentIds)
-
+  const residentsStatus = useSelector(state => state.residents.status)
+  const programsStatus = useSelector(state => state.programs.status)
+  if (residentsStatus !== 'idle' && programsStatus !== 'idle')  return <Loading/>
+  
   return (
-    <div className="App" style={{textAlign: 'center'}}>
-      <h2>Welbi Event Calendar</h2>
-      <FormModal title='Resident'/>
-      <FormModal title='Program'/>
-      <Row>
-      {
-        (programs.length && residents.length) ?
-        <>
-          <Col> {programs.map( program => <Program program={program} key={program}/> )} </Col>
-          <Col> {residents.map( resident => <Resident resident={resident} key={resident} />)} </Col>
-        </>
-         : <Col>Loading...</Col>
-      }
-      </Row>
-      
+    <div className="App" style={{textAlign: 'center', padding: '2%', backgroundColor: 'black'}}>
+    <Router>
+      <Switch>
+        <Route path="/program/:id" children={<Program/>} />
+        <Route path="/resident/:id" children={<Resident/>} />
+        <Route path='/'>
+          <Header />
+          <Home/>
+        </Route>
+      </Switch>
+    </Router>
     </div>
   )
 }
 
 export default App
+
+const Home = () => (
+  <Row>
+    <Col xs={12} s={6} md={6} lg={6}>
+      <List programs/>
+    </Col>
+    <Col xs={12} s={6} md={6} lg={6}>
+      <List residents/>
+    </Col>
+  </Row>
+)

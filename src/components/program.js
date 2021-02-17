@@ -5,9 +5,11 @@ import { selectResidentById } from '../store/residentSlice'
 import { useSelector } from 'react-redux'
 import { formatDateTime } from '../util'
 
-const Program = (props) => {
+import { useParams } from "react-router-dom";
+
+const Program = () => {
+  let { id } = useParams()
   const {
-    id,
     name,
     location,
     attendance,
@@ -19,7 +21,7 @@ const Program = (props) => {
     tags,
     start,
     end
-  } = useSelector(state => selectProgramById(state, props.program))
+  } = useSelector(state => selectProgramById(state, id))
 
   const mainText = [
     `Dimension: ${dimension}`,

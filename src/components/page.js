@@ -1,9 +1,20 @@
-import React, { useState } from "react"
-import { useDispatch } from 'react-redux'
-import { Card, ListGroup, ListGroupItem, Button, DropdownButton, Dropdown, Form, Row } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { useDispatch, useSelector} from 'react-redux'
+import { Link } from 'react-router-dom'
+import {
+  Button,
+  Card,
+  Dropdown,
+   DropdownButton,
+  Form,
+  ListGroup,
+  ListGroupItem,
+  Row
+} from 'react-bootstrap'
+
 import { residentProgram, selectPrograms } from '../store/programSlice'
 import { selectResidents, linkResidentToProgram } from '../store/residentSlice'
-import { useSelector } from "react-redux";
+import Loading from './loading'
 
 const engagementOptions = [
   'Active',
@@ -12,6 +23,10 @@ const engagementOptions = [
 ]
 
 const Page = (props) => {
+  const residentsStatus = useSelector(state => state.residents.status)
+  const programsStatus = useSelector(state => state.programs.status)
+  if (residentsStatus !== 'idle' && programsStatus !== 'idle')  return <Loading/>
+
   const {
     titleText,
     subtitleText,
@@ -28,7 +43,7 @@ const Page = (props) => {
   let handleClick
   let updateList
   let getDropdownItems
-  if (listTitle === "Attendees") {
+  if (listTitle === 'Attendees') {
     handleClick = async () => {
       let response = await dispatch(residentProgram({residentId: connectItems.id, programId: id, status: engagementStatus}))
       useDispatch(linkResidentToProgram(id, connectItems.id, engagementStatus))
@@ -65,8 +80,8 @@ const Page = (props) => {
   return (
     <Card key={id} style={{margin: '5px'}}>
       <Card.Body style={styles.card}>
-        <Card.Title id="title"> { titleText } </Card.Title>
-        <Card.Subtitle className="mb-2 text-muted"> { subtitleText } </Card.Subtitle>
+        <Card.Title id='title'> { titleText } </Card.Title>
+        <Card.Subtitle className='mb-2 text-muted'> { subtitleText } </Card.Subtitle>
         {bodyText[0] && bodyText.map((line, index) => <Card.Text key={index}> { line } </Card.Text>)}
         <Form.Label style={{fontWeight: 500}}>Add Resident to Event</Form.Label>
         <Row>
@@ -98,16 +113,20 @@ const Page = (props) => {
         </Row>
       </Card.Body>
         <Card.Title style={{textAlign:'left', marginLeft:'20px'}}> { listTitle } </Card.Title>
-      <ListGroup className="list-group-flush" style={{textAlign:'left'}}>
+      <ListGroup className='list-group-flush' style={{textAlign:'left'}}>
       {
         list ? list.length && list.map((listItem) => 
           <ListGroupItem key={listItem.id}>
             { listItem.name }, Engagement: { listItem.status }
           </ListGroupItem>) : <ListGroupItem key={0}>Nothing to show</ListGroupItem>
       }
-
       </ListGroup>
-      <Card.Footer> { footerText } </Card.Footer>
+      <Card.Body style={styles.card}>
+        <Link to={'/'}>Back</Link>
+      </Card.Body>
+      <Card.Footer>
+        { footerText }
+      </Card.Footer>
     </Card>
 )}
 

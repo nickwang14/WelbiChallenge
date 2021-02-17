@@ -5,14 +5,15 @@ import { selectResidentById } from '../store/residentSlice'
 import { useSelector } from 'react-redux'
 import { formatDate } from '../util'
 
-const Resident = (props) => {
+import { useParams } from "react-router-dom";
 
+const Resident = () => {
+  let { id } = useParams()
   const {
     ambulation,
     attendance,
     birthDate,
     moveInDate,
-    id,
     lastName,
     firstName,
     levelOfCare,
@@ -21,7 +22,7 @@ const Resident = (props) => {
     status,
     createdAt,
     updatedAt
-  } = useSelector(state => selectResidentById(state, props.resident))
+  } = useSelector(state => selectResidentById(state, id))
 
   const mainText = [
     `Birthday: ${formatDate(birthDate['@ts'])}`,
