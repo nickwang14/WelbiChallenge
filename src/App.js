@@ -7,6 +7,7 @@ import List from './components/list'
 import Loading from './components/loading'
 import Program from './components/program'
 import Resident from './components/resident'
+import { lightBlue } from './util'
 
 import {
   BrowserRouter as Router,
@@ -20,7 +21,7 @@ const App = () => {
   if (residentsStatus !== 'idle' && programsStatus !== 'idle')  return <Loading/>
   
   return (
-    <div className="App" style={{textAlign: 'center', padding: '2%', backgroundColor: 'black'}}>
+    <div className="App" style={{textAlign: 'center', padding: '2%', backgroundColor: lightBlue}}>
     <Router>
       <Switch>
         <Route path="/program/:id" children={<Program/>} />

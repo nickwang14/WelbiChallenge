@@ -5,12 +5,13 @@ import {
   Button,
   Card,
   Dropdown,
-   DropdownButton,
+  DropdownButton,
   Form,
   ListGroup,
   ListGroupItem,
   Row
 } from 'react-bootstrap'
+import {darkBlue, lightBlue, backgroundGrey} from '../util'
 
 import { residentProgram, selectPrograms } from '../store/programSlice'
 import { selectResidents, linkResidentToProgram } from '../store/residentSlice'
@@ -78,10 +79,12 @@ const Page = (props) => {
     }
 
   return (
-    <Card key={id} style={{margin: '5px'}}>
-      <Card.Body style={styles.card}>
-        <Card.Title id='title'> { titleText } </Card.Title>
+    <Card key={id}>
+     <Card.Header style={{backgroundColor: backgroundGrey, color: darkBlue}}>
+        <Card.Title id='title' > { titleText } </Card.Title>
         <Card.Subtitle className='mb-2 text-muted'> { subtitleText } </Card.Subtitle>
+      </Card.Header>
+      <Card.Body style={styles.card}>
         {bodyText[0] && bodyText.map((line, index) => <Card.Text key={index}> { line } </Card.Text>)}
         <Form.Label style={{fontWeight: 500}}>Add Resident to Event</Form.Label>
         <Row>
@@ -121,10 +124,10 @@ const Page = (props) => {
           </ListGroupItem>) : <ListGroupItem key={0}>Nothing to show</ListGroupItem>
       }
       </ListGroup>
-      <Card.Body style={styles.card}>
+      <Card.Body style={{...styles.card, color: lightBlue}}>
         <Link to={'/'}>Back</Link>
       </Card.Body>
-      <Card.Footer>
+      <Card.Footer style={{color: darkBlue}}>
         { footerText }
       </Card.Footer>
     </Card>
@@ -133,7 +136,6 @@ const Page = (props) => {
 const styles = {
   card: {
     textAlign: 'left',
-    margin: '5px'
   }
 }  
 

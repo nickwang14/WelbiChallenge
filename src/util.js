@@ -11,3 +11,7 @@ export const formatDate = (date) => {
 export const formatTime = (date) => {
   return format(parseISO(date), "hh:mm aaaa");
 };
+
+export const lightBlue = '#019fd1'
+export const darkBlue = '#005392'
+export const backgroundGrey = '#e5e5e5'
